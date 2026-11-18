@@ -1,17 +1,17 @@
-TuyaClient               KEYWORD1
+TuyaClient	KEYWORD1
 
-getCert                  KEYWORD2
-begin                    KEYWORD2
-onMessage                KEYWORD2
-publish                  KEYWORD2
-loop                     KEYWORD2
-disconnect               KEYWORD2
-onData                   KEYWORD2
-onReset                  KEYWORD2
-onQRCode                 KEYWORD2
-onActivated              KEYWORD2
+getCert	KEYWORD2
+begin	KEYWORD2
+onMessage	KEYWORD2
+publish	KEYWORD2
+loop	KEYWORD2
+disconnect	KEYWORD2
+onData	KEYWORD2
+onReset	KEYWORD2
+onQRCode	KEYWORD2
+onActivated	KEYWORD2
 
-MQTT_CALLBACK_SIGNATURE  LITERAL1
-TUYA_PID                 LITERAL1
-TUYA_UUID                LITERAL1
-TUYA_AUTHKEY             LITERAL1
+MQTT_CALLBACK_SIGNATURE	LITERAL1
+TUYA_PID	LITERAL1
+TUYA_UUID	LITERAL1
+TUYA_AUTHKEY	LITERAL1
