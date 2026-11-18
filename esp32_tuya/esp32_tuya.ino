@@ -18,16 +18,20 @@ uint32_t time(void)
 
 #define LED_PIN 8
 
+#define DEFAULT_LED_STATE off
+
 class LED
 {
     private:
         int _pin;
+        bool _state;
 
     public:
         LED(int pin);
         void begin(void);
         void on(void);
         void off(void);
+        bool state(void) const { return _state; }
 };
 
 LED::LED(int pin)
@@ -38,19 +42,21 @@ LED::LED(int pin)
 void LED::begin(void)
 {
     pinMode(_pin, OUTPUT);
-    on();
+    DEFAULT_LED_STATE();
 }
 
 void LED::on(void)
 {
     Serial.println("LED is ON");
     digitalWrite(_pin, LOW);
+    _state = true;
 }
 
 void LED::off(void)
 {
     Serial.println("LED is OFF");
     digitalWrite(_pin, HIGH);
+    _state = false;
 }
 
 LED led(LED_PIN);
@@ -370,6 +376,9 @@ void onReset(String data)
     }
     Serial.println("Tuya client is ready.");
     display.print(0, "Tuya OK    ");
+    JSONVar state;
+    state["101"] = led.state();
+    tuya.publish(JSON.stringify(state));
 }
 
 void onData(String data)
@@ -503,6 +512,9 @@ void loop()
                 }
                 Serial.println("Tuya client is ready.");
                 display.print(0, "Tuya OK    ");
+                JSONVar state;
+                state["101"] = led.state();
+                tuya.publish(JSON.stringify(state));
                 tuyaConnected = true;
             }
             else if(status != WL_IDLE_STATUS && status != WL_DISCONNECTED)
