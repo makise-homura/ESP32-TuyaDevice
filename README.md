@@ -320,3 +320,9 @@ The `readTimeStamp()`, `printQRCode()`, `parseJSONAndReactToChanges()`, `connect
 To correctly work with HTTPS, one should use the root CA certificates.
 
 They are supplied with the code in `cacert_pem.h` file.
+
+## Logging
+
+The client implementation uses standard ESP32 logging facility. You may control it through Arduino IDE Tools menu, setting Core Debug Level.
+
+The recommended logging level for production build is Info, but feel free to switch to Debug or even Verbose if you need dumps and raw JSON data.

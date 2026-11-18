@@ -289,7 +289,6 @@ void Web_acceptForm()
     }
     String SSID = authServer.arg("ssid");
     String password = authServer.arg("password");
-    Serial.println("- SSID: received a form.");
     if(authServer.arg("ssid").isEmpty())
     {
         Serial.println("HTTP Server: SSID is empty.");
@@ -351,7 +350,6 @@ TuyaClient tuya(https, time, onMessage, TUYA_PID, TUYA_UUID, TUYA_AUTHKEY);
 
 void onMessage(char *topic, uint8_t *payload, unsigned int length)
 {
-    Serial.println(String("Received a MQTT message to ") + topic);
     if(!tuya.onMessage(topic, payload, length)) Serial.println("Failed to process message.");
 }
 
@@ -395,7 +393,7 @@ void onData(String data)
 
 void onActivated(String data)
 {
-    Serial.println("Activation successful! Payload: " + data);
+    Serial.println("Activation is successful!");
 }
 
 void setup()
@@ -451,7 +449,6 @@ void loop()
         wl_status_t status;
         if(wifiConnection.statusChanged(status))
         {
-            Serial.println(String("WiFi status changed to ") + status);
             switch(status)
             {
                 case WL_IDLE_STATUS:
