@@ -395,7 +395,8 @@ bool TuyaClient::begin(void)
 
         HTTPClient http;
         String url = "https://h1.iot-dns.com/v1/url_config";
-        _client.setCACert(getCert("iot_dns").c_str());
+        String cert = getCert("iot_dns");
+        _client.setCACert(cert.c_str());
         http.begin(_client, url);
         http.addHeader("Content-Type", "application/json");
         String payload = JSON.stringify(config);
@@ -439,7 +440,8 @@ bool TuyaClient::begin(void)
     int port = _endpoint["mqtt"]["port"];
     log_i("MQTT Server: %s:%d\n", server, port);
     setServer(server.c_str(), port);
-    _client.setCACert(getCert("tuya").c_str());
+    String cert = getCert("tuya");
+    _client.setCACert(cert.c_str());
 
     _preferences.begin("TuyaData", false);
     _activated = _preferences.getString("Activated", "{}");

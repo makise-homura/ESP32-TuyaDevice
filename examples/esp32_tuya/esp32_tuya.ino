@@ -329,7 +329,8 @@ class Inet
 bool Inet::begin(void)
 {
     WiFiClientSecure _https;
-    _https.setCACert(TuyaClient::getCert("tuya").c_str());
+    String cert = TuyaClient::getCert("tuya");
+    _https.setCACert(cert.c_str());
     HTTPClient _http;
     _http.begin(_https, "https://www.tuya.com");
     int httpCode = _http.GET();
