@@ -1,10 +1,15 @@
 {
     "name": "ESP32-TuyaDevice",
+    "authors": [{ "name": "Igor Molchanov", "email": "akemi_homura@kurisa.ch", "url": "https://github.com/makise-homura", "maintainer": true }],
     "keywords": "ethernet, mqtt, wifi, iot",
-    "description": "An Arduino library to help converting your ESP32 to fully functional IoT device that can be controlled from SmartLife. Using this library, you may control you ESP32 (e.g., turning some GPIOs on/off or so) using Tuya SmartLife application the same way as if it is a standalone Wi-Fi IoT device without any Python intermediates.",
+    "description": "An Arduino library to help converting your ESP32 to fully functional IoT device that can be controlled from SmartLife. Using this library, you may control you ESP32 using Tuya SmartLife application as if it is a standalone Wi-Fi IoT device.",
     "repository": { "type": "git", "url": "https://github.com/makise-homura/ESP32-TuyaDevice" },
     "version": "1.0",
+    "license": "MIT",
     "examples": "examples/*/*.ino",
     "frameworks": "arduino",
-    "platforms": [ "espressif32" ]
+    "platforms": [ "espressif32" ],
+    "headers": [ "ESP32Tuya.h" ],
+    "dependencies": { "arduino-libraries/Arduino_JSON": "*", "knolleary/PubSubClient": "*" },
+    "examples": [{ "name": "ESP32_Tuya", "base": "examples/esp32_tuya", "files": [ "esp32_tuya.ino", "README.md" ] }]
 }
