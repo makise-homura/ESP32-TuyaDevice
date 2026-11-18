@@ -3,7 +3,7 @@
 
 #include <Preferences.h>
 #include <Arduino_JSON.h>
-#include <WiFiClientSecure.h>
+#include <NetworkClientSecure.h>
 #include <PubSubClient.h>
 
 class TuyaClient: private PubSubClient
@@ -28,7 +28,7 @@ class TuyaClient: private PubSubClient
         String _region;
 
         Preferences _preferences;
-        WiFiClientSecure &_client;
+        NetworkClientSecure &_client;
         uint32_t (*_timefunc)(void);
 
         MQTT_CALLBACK_SIGNATURE;
@@ -53,7 +53,7 @@ class TuyaClient: private PubSubClient
         bool _connect(void);
 
     public:
-        TuyaClient(WiFiClientSecure &client, uint32_t (*timefunc)(void), MQTT_CALLBACK_SIGNATURE, String productId, String uuid, String authKey, String version = "1.0.0", String regist = "pro");
+        TuyaClient(NetworkClientSecure &client, uint32_t (*timefunc)(void), MQTT_CALLBACK_SIGNATURE, String productId, String uuid, String authKey, String version = "1.0.0", String regist = "pro");
         ~TuyaClient(void);
 
         bool begin(void);

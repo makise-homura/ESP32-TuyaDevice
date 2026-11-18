@@ -115,7 +115,7 @@ To create an instance, do the following:
 TuyaClient tuya(https, time, onMessage, TUYA_PID, TUYA_UUID, TUYA_AUTHKEY);
 ```
 
-* `https`: a `WiFiClientSecure` instance used to communicate with the internet
+* `https`: a `NetworkClientSecure` instance (usually `WiFiClientSecure`) used to communicate with the internet
 * `time`: a function (`uint32_t (*)(void)`) used to get the current timestamp, just like `time()` in C stdlib
 * `TUYA_PID`, `TUYA_UUID`, `TUYA_AUTHKEY`: auth data you received from Tuya
 

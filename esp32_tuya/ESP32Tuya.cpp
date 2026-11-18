@@ -269,7 +269,7 @@ bool TuyaClient::publish(String dps)
     return ret;
 }
 
-TuyaClient::TuyaClient(WiFiClientSecure &client, uint32_t (*timefunc)(void), MQTT_CALLBACK_SIGNATURE, String productId, String uuid, String authKey, String version, String regist): _client(client)
+TuyaClient::TuyaClient(NetworkClientSecure &client, uint32_t (*timefunc)(void), MQTT_CALLBACK_SIGNATURE, String productId, String uuid, String authKey, String version, String regist): _client(client)
 {
     _timefunc = timefunc;
     this->callback = callback;
