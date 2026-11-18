@@ -120,7 +120,7 @@ uint8_t *TuyaClient::_decrypt(String key, const uint8_t *data, size_t size)
 {
     if(size % 16)
     {
-        log_w("ERROR: length of data to decrypt (%d) is not a multiple of 16!\n", size);
+        log_w("ERROR: length of data to decrypt (%d) is not a multiple of 16!", size);
         return NULL;
     }
 
@@ -189,13 +189,13 @@ JSONVar TuyaClient::_decodePacket(String key, uint8_t *data, unsigned int length
     source = ntohl(header->source);
     if(strncmp("2.2", header->protocol, 3))
     {
-        log_w("ERROR: protocol (%3s) is not 2.2!\n", header->protocol);
+        log_w("ERROR: protocol (%3s) is not 2.2!", header->protocol);
         return JSONVar();
     }
     uint32_t actualCrc = crc32_le(0, data + 7, length - 7);
     if(actualCrc != crc32)
     {
-        log_w("ERROR: CRC32 check failed (actual %08x != %08x in header)!\n", actualCrc, crc32);
+        log_w("ERROR: CRC32 check failed (actual %08x != %08x in header)!", actualCrc, crc32);
         return JSONVar();
     }
     data += 15;
@@ -215,24 +215,24 @@ TuyaClient::~TuyaClient(void)
 
 bool TuyaClient::onMessage(char *topic, uint8_t *payload, unsigned int length)
 {
-    log_d("MQTT message received with topic %s and length %d bytes\n", topic, length);
+    log_d("MQTT message received with topic %s and length %d bytes", topic, length);
     if(_topicIn != topic)
     {
-        log_w("Topics do not match, ignoring message.\n");
+        log_w("Topics do not match, ignoring message.");
         return false;
     }
 
     uint32_t sequence, source, crc32;
     JSONVar json = _decodePacket(_secretKey, payload, length, sequence, source, crc32);
     _sequence = sequence;
-    log_v("Message contents: %s\n", JSON.stringify(json));
+    log_v("Message contents: %s", JSON.stringify(json));
     int protocol = json["protocol"];
     switch(protocol)
     {
         case 5: /* MQ_DPS_DATA_ON */
             if(_clientId == _devId)
             {
-                log_d("DPS message received: %s\n", JSON.stringify(json));
+                log_d("DPS message received: %s", JSON.stringify(json));
                 if(onData) onData(JSON.stringify(json["data"]["dps"]));
                 return true;
             }
@@ -240,7 +240,7 @@ bool TuyaClient::onMessage(char *topic, uint8_t *payload, unsigned int length)
         case 11: /* MQ_RESET_ON */
             if(_clientId == _devId)
             {
-                log_d("Activation reset: %s\n", JSON.stringify(json));
+                log_d("Activation reset: %s", JSON.stringify(json));
                 _preferences.begin("TuyaData", false);
                 _preferences.remove("Activated");
                 _preferences.end();
@@ -252,7 +252,7 @@ bool TuyaClient::onMessage(char *topic, uint8_t *payload, unsigned int length)
         case 46: /* MQ_ACTIVE_TOKEN_ON */
             if(_clientId == "acon_" + _devId)
             {
-                log_d("Received token: %s\n", JSON.stringify(json));
+                log_d("Received token: %s", JSON.stringify(json));
                 String region = json["data"]["region"];
                 String token = json["data"]["token"];
                 uint32_t t = _timefunc();
@@ -272,52 +272,52 @@ bool TuyaClient::onMessage(char *topic, uint8_t *payload, unsigned int length)
                 String urlbase = _endpoint["atop"]["url"];
                 String sbuf = String("a=tuya.device.active||et=1||t=") + t + "||uuid=" + _uuid + "||v=4.3||" + _authKey;
                 String url = urlbase + "?a=tuya.device.active&et=1&t=" + t + "&uuid=" + _uuid + "&v=4.3&sign=" + _md5(sbuf);
-                log_v("sbuf: %s\n", sbuf);
-                log_v("url: %s\n", url);
+                log_v("sbuf: %s", sbuf);
+                log_v("url: %s", url);
 
                 HTTPClient http;
                 http.begin(_client, url);
                 http.addHeader("User-Agent", "TUYA_IOT_SDK");
                 http.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
                 String payload = _encryptHex(_authKey, JSON.stringify(data));
-                log_v("HTTP: Sending data: %s\n", payload);
+                log_v("HTTP: Sending data: %s", payload);
                 int responseCode = http.POST(payload);
                 String responseText = http.getString();
-                log_v("HTTP: Response: %d, payload: %s\n", responseCode, responseText);
+                log_v("HTTP: Response: %d, payload: %s", responseCode, responseText);
                 if(responseCode != 200)
                 {
-                    log_e("HTTP: Can not reach activation endpoint %s.\n", url);
+                    log_e("HTTP: Can not reach activation endpoint %s.", url);
                     return false;
                 }
                 JSONVar response = JSON.parse(responseText);
                 http.end();
                 if(!response.hasOwnProperty("result"))
                 {
-                    log_e("Bad payload format of activation response.\n");
+                    log_e("Bad payload format of activation response.");
                     return false;
                 }
                 String decrypted = _decryptBase64(_authKey, response["result"]);
                 JSONVar decryptedJson = JSON.parse(decrypted);
                 if(!decryptedJson["success"])
                 {
-                    log_e("Activation failed: %s\n", decrypted);
+                    log_e("Activation failed: %s", decrypted);
                     return false;
                 }
                 _region = region;
                 _activated = JSON.stringify(decryptedJson["result"]);
-                log_i("Activation is successful.\n");
-                log_d("Activation result: %s\n", _activated);
+                log_i("Activation is successful.");
+                log_d("Activation result: %s", _activated);
                 return true;
             }
             break;
     }
-    log_w("Not expected a message of this type (%d) now, skipping.\n", protocol);
+    log_w("Not expected a message of this type (%d) now, skipping.", protocol);
     return false;
 }
 
 bool TuyaClient::publish(String dps)
 {
-    log_i("Publishing data points: %s\n", dps);
+    log_i("Publishing data points: %s", dps);
     JSONVar dpsData = JSON.parse(dps);
     JSONVar data;
     data["dps"] = dpsData;
@@ -357,13 +357,13 @@ bool TuyaClient::_connect(void)
 {
     _sequence = 0;
     _password = _md5(_signKey).substring(8,24);
-    log_d("MQTT connect: devId = %s, secretKey = %s, signKey = %s, password = %s, clientId = %s\n", _devId, _secretKey, _signKey, _password, _clientId);
+    log_d("MQTT connect: devId = %s, secretKey = %s, signKey = %s, password = %s, clientId = %s", _devId, _secretKey, _signKey, _password, _clientId);
     if(connect(_clientId.c_str(), _clientId.c_str(), _password.c_str()))
     {
-        log_d("Connected, subscribing to %s\n", _topicIn);
+        log_d("Connected, subscribing to %s", _topicIn);
         return subscribe(_topicIn.c_str(), 1);
     }
-    log_e("Connect failed, state: %d\n", state());
+    log_e("Connect failed, state: %d", state());
     return false;
 }
 
@@ -375,7 +375,7 @@ bool TuyaClient::begin(void)
     setBufferSize(16384);
     if(!_endpoint.hasOwnProperty("mqtt"))
     {
-        log_i("No endpoint yet, requesting...\n");
+        log_i("No endpoint yet, requesting...");
         JSONVar configHttps;
         configHttps["key"] = "httpsUrl";
         configHttps["need_ca"] = true;
@@ -400,20 +400,20 @@ bool TuyaClient::begin(void)
         http.begin(_client, url);
         http.addHeader("Content-Type", "application/json");
         String payload = JSON.stringify(config);
-        log_d("Sending JSON: %s\n", payload);
+        log_d("Sending JSON: %s", payload);
         int responseCode = http.POST(payload);
         String responseText = http.getString();
-        log_v("HTTP: Response: %d, payload: %s\n", responseCode, responseText);
+        log_v("HTTP: Response: %d, payload: %s", responseCode, responseText);
         if(responseCode != 200)
         {
-            log_e("HTTP: Can not reach endpoint config site %s.\n", url);
+            log_e("HTTP: Can not reach endpoint config site %s.", url);
             return false;
         }
         JSONVar response = JSON.parse(responseText);
         http.end();
         if(!response.hasOwnProperty("mqttsUrl") || !response.hasOwnProperty("httpsUrl"))
         {
-            log_e("Bad contents of endpoint query response.\n");
+            log_e("Bad contents of endpoint query response.");
             return false;
         }
 
@@ -423,7 +423,7 @@ bool TuyaClient::begin(void)
         int delim = mqttSrv.indexOf(":");
         if(delim < 0)
         {
-            log_e("Endpoint does not contain port number.\n");
+            log_e("Endpoint does not contain port number.");
             return false;
         }
         endpointMqtts["host"] = mqttSrv.substring(0, delim);
@@ -433,12 +433,12 @@ bool TuyaClient::begin(void)
         JSONVar endpoint;
         endpoint["mqtt"] = endpointMqtts;
         endpoint["atop"] = endpointHttps;
-        log_d("Endpoint received: %s\n", JSON.stringify(endpoint));
+        log_d("Endpoint received: %s", JSON.stringify(endpoint));
         _endpoint = endpoint;
     }
     String server = _endpoint["mqtt"]["host"];
     int port = _endpoint["mqtt"]["port"];
-    log_i("MQTT Server: %s:%d\n", server, port);
+    log_i("MQTT Server: %s:%d", server, port);
     setServer(server.c_str(), port);
     String cert = getCert("tuya");
     _client.setCACert(cert.c_str());
@@ -449,7 +449,7 @@ bool TuyaClient::begin(void)
     _preferences.end();
     if(_activated == "{}")
     {
-        log_i("Not activated yet, requesting activation...\n");
+        log_i("Not activated yet, requesting activation...");
         _devId = _uuid;
         _secretKey = _authKey;
         _signKey = _authKey;
@@ -458,7 +458,7 @@ bool TuyaClient::begin(void)
         _topicOut = "";
         if(!_connect())
         {
-            log_e("Failed to start activation MQTT instance.\n");
+            log_e("Failed to start activation MQTT instance.");
             return false;
         }
         String url = "https://smartapp.tuya.com/s/p?p=" + _productId + "&uuid=" + _uuid + "&v=2.0";
@@ -483,7 +483,7 @@ bool TuyaClient::begin(void)
     _topicOut = "smart/device/out/" + _devId;
     if(!_connect())
     {
-        log_e("Failed to start main MQTT instance.\n");
+        log_e("Failed to start main MQTT instance.");
         return false;
     }
     return true;
