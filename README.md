@@ -48,6 +48,8 @@ After you've done this, just build it with Arduino IDE, program the flash, and v
 
 **Note**: if you have troubles with not being able to confirm your identity, check that you created your project using a data center not in China.
 
+**Note 2**: if you have no program space when flashing a built binary, select "Minimal SPIFFS" partition scheme in Arduino IDE.
+
 ## Running
 
 ### Configuring Wi-Fi
