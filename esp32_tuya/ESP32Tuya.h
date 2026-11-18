@@ -56,6 +56,8 @@ class TuyaClient: private PubSubClient
         TuyaClient(NetworkClientSecure &client, uint32_t (*timefunc)(void), MQTT_CALLBACK_SIGNATURE, String productId, String uuid, String authKey, String version = "1.0.0", String regist = "pro");
         ~TuyaClient(void);
 
+        static String getCert(String name);
+
         bool begin(void);
         bool onMessage(char *topic, uint8_t *payload, unsigned int length);
         bool publish(String dps);

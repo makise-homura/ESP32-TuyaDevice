@@ -319,7 +319,7 @@ The `readTimeStamp()`, `printQRCode()`, `parseJSONAndReactToChanges()`, `connect
 
 To correctly work with HTTPS, one should use the root CA certificates.
 
-They are supplied with the code in `cacert_pem.h` file.
+They are supplied by a public static method `TuyaClient::getCert(String name)`. `name` might be `"tuya"` or `"iot_dns"`.
 
 ## Logging
 

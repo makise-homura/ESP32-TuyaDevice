@@ -312,7 +312,7 @@ void Web_acceptForm()
 
 #include <WiFiClientSecure.h>
 #include <HTTPClient.h>
-#include <cacert_pem.h>
+#include "ESP32Tuya.h"
 
 class Inet
 {
@@ -329,7 +329,7 @@ class Inet
 bool Inet::begin(void)
 {
     WiFiClientSecure _https;
-    _https.setCACert(tuya_cacert_pem);
+    _https.setCACert(TuyaClient::getCert("tuya").c_str());
     HTTPClient _http;
     _http.begin(_https, "https://www.tuya.com");
     int httpCode = _http.GET();
@@ -341,8 +341,6 @@ bool Inet::begin(void)
 Inet inet;
 
 /************** Tuya client **************/
-
-#include "ESP32Tuya.h"
 
 #include <qrcode.h>
 
