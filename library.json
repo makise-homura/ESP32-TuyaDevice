@@ -4,7 +4,7 @@
     "keywords": "ethernet, mqtt, wifi, iot",
     "description": "An Arduino library to help converting your ESP32 to fully functional IoT device that can be controlled from SmartLife. Using this library, you may control you ESP32 using Tuya SmartLife application as if it is a standalone Wi-Fi IoT device.",
     "repository": { "type": "git", "url": "https://github.com/makise-homura/ESP32-TuyaDevice" },
-    "version": "1.0.1",
+    "version": "1.0.2",
     "license": "MIT",
     "examples": "examples/*/*.ino",
     "frameworks": "arduino",
